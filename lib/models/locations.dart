@@ -1,16 +1,16 @@
 import 'package:citylist/models/client.dart';
 
-class CityList {
+class CityAPI {
   final String name;
 
-  CityList({this.name});
+  CityAPI({this.name});
 
-  static Future<List<CityList>> getCities() async {
+  static Future<List<CityAPI>> getCities() async {
     GqlClient client = new GqlClient();
     var result = await client.query(query: CityQuery);
     List data = result['cities'];
-    List<CityList> _cities = data
-        .map<CityList>((city) => CityList(
+    List<CityAPI> _cities = data
+        .map<CityAPI>((city) => CityAPI(
               name: city["name"],
             ))
         .toList();
@@ -18,19 +18,19 @@ class CityList {
   }
 }
 
-class AreaList {
+class AreaAPI {
   final String name;
-  List<SubAreaList> subareas;
+  List<SubAreaAPI> subareas;
 
-  AreaList({this.name, this.subareas});
+  AreaAPI({this.name, this.subareas});
 
-  static Future<List<AreaList>> getAreas(cityName) async {
+  static Future<List<AreaAPI>> getAreas(cityName) async {
     GqlClient client = new GqlClient();
     var result =
         await client.query(query: AreaQuery, variables: {'cityName': cityName});
     List data = result['areas'];
-    List<AreaList> _areas = data
-        .map<AreaList>((area) => AreaList(
+    List<AreaAPI> _areas = data
+        .map<AreaAPI>((area) => AreaAPI(
               name: area["name"],
             ))
         .toList();
@@ -38,19 +38,19 @@ class AreaList {
   }
 }
 
-class SubAreaList {
+class SubAreaAPI {
   final String id;
   final String name;
 
-  SubAreaList({this.id, this.name});
+  SubAreaAPI({this.id, this.name});
 
-  static Future<List<SubAreaList>> getSubAreas(cityName) async {
+  static Future<List<SubAreaAPI>> getSubAreas(areaName) async {
     GqlClient client = new GqlClient();
     var result = await client
-        .query(query: SubAreaQuery, variables: {'areaName': cityName});
+        .query(query: SubAreaQuery, variables: {'areaName': areaName});
     List data = result['subareas'];
-    List<SubAreaList> _subareas = data
-        .map<SubAreaList>((subarea) => SubAreaList(
+    List<SubAreaAPI> _subareas = data
+        .map<SubAreaAPI>((subarea) => SubAreaAPI(
               name: subarea["name"],
             ))
         .toList();

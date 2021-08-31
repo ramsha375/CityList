@@ -5,7 +5,7 @@ import 'package:citylist/views/ExpandedAreas.dart';
 import 'package:flutter/material.dart';
 
 class Area extends StatefulWidget {
-  final CityList city;
+  final CityAPI city;
   Area(this.city);
 
   @override
@@ -13,29 +13,26 @@ class Area extends StatefulWidget {
 }
 
 class _AreaState extends State<Area> {
-  bool loading = false;
-  List<AreaList> areas = [];
+  bool loading = true;
+  List<AreaAPI> areas = [];
   @override
   void initState() {
     super.initState();
     fetchAreas();
   }
 
-  List<SubAreaList> subareas = [];
-  Future<List<AreaList>> fetchAreas() async {
-    List<AreaList> fetchAreas = await AreaList.getAreas(widget.city.name);
+  List<SubAreaAPI> subareas = [];
+  Future<List<AreaAPI>> fetchAreas() async {
+    List<AreaAPI> fetchAreas = await AreaAPI.getAreas(widget.city.name);
 
     setState(() {
       areas = fetchAreas;
-      loading = true;
+      loading = false;
     });
     return areas;
   }
 
-  updateSubareas(newSubareas, AreaList area) {
-    print(newSubareas);
-    print(area);
-    print(area.subareas);
+  updateSubareas(newSubareas, AreaAPI area) {
     area.subareas = newSubareas;
     setState(() {
       subareas = newSubareas;
@@ -45,26 +42,28 @@ class _AreaState extends State<Area> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.city.name),
-      ),
-      body: (loading)
-          ? Padding(
-              padding: const EdgeInsets.all(kDefaultPadding),
-              child: ListView.builder(
-                itemCount: areas.length,
-                itemBuilder: (context, i) {
-                  return ExpandedAreas(
-                    area: areas[i],
-                    subarea: areas[i].subareas,
-                    updateSubareas: (newSubareas) {
-                      updateSubareas(newSubareas, areas[i]);
-                    },
-                  );
-                },
-              ),
-            )
-          : Progress(),
-    );
+        appBar: AppBar(
+          title: Text(widget.city.name),
+        ),
+        body: (loading)
+            ? Progress(
+                width: kwidth,
+                height: kheight,
+              )
+            : Padding(
+                padding: const EdgeInsets.all(kDefaultPadding),
+                child: ListView.builder(
+                  itemCount: areas.length,
+                  itemBuilder: (context, i) {
+                    return ExpandedAreas(
+                      area: areas[i],
+                      subarea: areas[i].subareas,
+                      updateSubareas: (newSubareas) {
+                        updateSubareas(newSubareas, areas[i]);
+                      },
+                    );
+                  },
+                ),
+              ));
   }
 }

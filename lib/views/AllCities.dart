@@ -10,22 +10,19 @@ class AllCities extends StatefulWidget {
 }
 
 class _AllCitiesState extends State<AllCities> {
-  bool loading = false;
-  List<CityList> cities = [];
+  bool loading = true;
+  List<CityAPI> cities = [];
   @override
   void initState() {
     super.initState();
     fetchCities();
-    // SubAreaList.getSubAreas("MA Jinnah Road").then((fetchedareas) {
-    //   print(fetchedareas);
-    // });
   }
 
-  Future<List<CityList>> fetchCities() async {
-    List<CityList> fetchCities = await CityList.getCities();
+  Future<List<CityAPI>> fetchCities() async {
+    List<CityAPI> fetchCities = await CityAPI.getCities();
     setState(() {
       cities = fetchCities;
-      loading = true;
+      loading = false;
     });
     return cities;
   }
@@ -33,12 +30,15 @@ class _AllCitiesState extends State<AllCities> {
   @override
   Widget build(BuildContext context) {
     return (loading)
-        ? Expanded(
+        ? Progress(
+            width: kwidth,
+            height: kheight,
+          )
+        : Expanded(
             child: ListView.builder(
                 itemCount: cities.length,
                 itemBuilder: (BuildContext context, int index) {
                   return CityCard(city: cities[index]);
-                }))
-        : Progress();
+                }));
   }
 }

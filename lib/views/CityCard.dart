@@ -4,7 +4,7 @@ import 'package:citylist/views/Areas.dart';
 import 'package:flutter/material.dart';
 
 class CityCard extends StatefulWidget {
-  final CityList city;
+  final CityAPI city;
   CityCard({this.city});
 
   @override

@@ -1,10 +1,11 @@
+import 'package:citylist/components/circularprogress.dart';
 import 'package:citylist/components/constants.dart';
 import 'package:citylist/models/locations.dart';
 import 'package:flutter/material.dart';
 
 class SubAreaCard extends StatefulWidget {
-  final AreaList area;
-  final List<SubAreaList> subarea;
+  final AreaAPI area;
+  final List<SubAreaAPI> subarea;
   final Function updateSubareas;
 
   SubAreaCard({this.area, this.subarea, this.updateSubareas});
@@ -14,7 +15,7 @@ class SubAreaCard extends StatefulWidget {
 }
 
 class _SubAreaCardState extends State<SubAreaCard> {
-  bool loading = false;
+  bool loading = true;
 
   @override
   void initState() {
@@ -24,38 +25,48 @@ class _SubAreaCardState extends State<SubAreaCard> {
 
   fetchSubAreas() async {
     if (widget.subarea == null) {
-      List<SubAreaList> fetchSubAreas =
-          await SubAreaList.getSubAreas(widget.area.name);
+      List<SubAreaAPI> fetchSubAreas =
+          await SubAreaAPI.getSubAreas(widget.area.name);
       widget.updateSubareas(fetchSubAreas);
       setState(() {
-        loading = true;
+        loading = false;
       });
     } else {
       setState(() {
-        loading = true;
+        loading = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.subarea);
     return (loading)
-        ? Padding(
-            padding: const EdgeInsets.all(kDefaultPadding),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: widget.subarea
-                    .map((item) => new Text('${item.name}'))
-                    .toList()),
-          )
-        : Center(
+        ? Center(
             child: Padding(
               padding: const EdgeInsets.all(kDefaultPadding),
-              child: CircularProgressIndicator(
-                strokeWidth: 4,
+              child: Progress(
+                width: kwidth - 20,
+                height: kheight - 20,
               ),
             ),
-          );
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: widget.subarea
+                .map((item) => Padding(
+                      padding: const EdgeInsets.only(
+                          left: kDefaultPadding, bottom: kDefaultPadding),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            size: cDefaultPadding,
+                          ),
+                          SizedBox(width: 40),
+                          new Text('${item.name}'),
+                        ],
+                      ),
+                    ))
+                .toList());
   }
 }

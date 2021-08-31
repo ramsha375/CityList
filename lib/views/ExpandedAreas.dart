@@ -4,8 +4,8 @@ import 'package:citylist/views/SubAreaCard.dart';
 import 'package:flutter/material.dart';
 
 class ExpandedAreas extends StatefulWidget {
-  final AreaList area;
-  final List<SubAreaList> subarea;
+  final AreaAPI area;
+  final List<SubAreaAPI> subarea;
   final Function updateSubareas;
 
   const ExpandedAreas({this.area, this.subarea, this.updateSubareas});
